@@ -1,6 +1,6 @@
 #!/bin/bash
 host=$1
-port=$1
+port=$2
 
 if [[ ! $host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "Invalid host. Please provide a valid IPv4 address."
