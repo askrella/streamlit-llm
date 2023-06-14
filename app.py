@@ -87,8 +87,14 @@ if os.path.exists(DATA_PATH):
 
     # Send button
     if send_button:
+        # Print question
         st.title("Question:")
         st.write(question)
+
+        # Spinner
+        st.spinner("Querying...")
+
+        # Query
         print(f"Question: {question}")
         result = semantic_search(question)
 
