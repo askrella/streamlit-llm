@@ -2,14 +2,21 @@
 
 This is a Streamlit app that allows you to upload an document or audio file and ask questions about its content. It uses the Llama Index framework, powered by OpenAI's ChatGPT and Hugging Face's Sentence Transformers model, to perform semantic search and provide answers based on your queries.
 
-## Preview
+# Preview
 ![image](https://github.com/navopw/streamlit-llm/assets/6507938/9eaa95fc-2767-4c66-97fc-8f6e0d4c17e7)
 
-## Prerequisites
+# Supported file types
+
+- All types of raw text documents
+- PDF documents
+- Audio files (mp3, wav, ogg)
+- Video file (mp4)
+
+# Prerequisites
 
 For audio transcription, you need to have [ffmpeg](https://ffmpeg.org/) installed on your system.
 
-## Installation
+# Installation
 
 1. Clone the repository:
 
@@ -26,7 +33,7 @@ For audio transcription, you need to have [ffmpeg](https://ffmpeg.org/) installe
 3. Set up environment variables:
 
    - Create a file named `.env` in the root directory of the project.
-   - Add your OpenAI API key and a Password (protects your streamlit llm tool) to the `.env` file:
+   - Add your OpenAI API key to the `.env` file:
 
      ```text
      OPENAI_API_KEY=your_api_key
@@ -39,17 +46,6 @@ For audio transcription, you need to have [ffmpeg](https://ffmpeg.org/) installe
    ```shell
    ./start.sh <host> <port>
    ```
-
-The app will perform semantic search on the uploaded documents and provide the answer to your question. It will also display the sources and additional information related to the answer.
-
-All documents are stored in the `data` directory.
-
-## Supported file types
-
-- All types of raw text documents
-- PDF documents
-- Audio files (mp3, wav, ogg)
-- Video file (mp4)
 
 ## License
 
