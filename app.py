@@ -58,8 +58,8 @@ def save_uploadedfile(uploadedfile):
     if not os.path.exists(DATA_PATH):
         os.makedirs(DATA_PATH)
 
-    # Audio support
-    if uploadedfile.name.endswith(('.mp3', '.ogg', '.wav')):
+    # Audio, Video support
+    if uploadedfile.name.endswith(('.mp3', '.ogg', '.wav', '.mp4')):
         uploaded_file_name = uploadedfile.name
         uploaded_file_buffer = uploadedfile.getbuffer()
         file_extension = uploaded_file_name.split('.')[-1]
