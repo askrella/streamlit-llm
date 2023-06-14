@@ -36,7 +36,7 @@ This is a Streamlit app that allows you to upload an document or file and ask qu
 1. Run the Streamlit app:
 
    ```shell
-   ./start.sh <port>
+   ./start.sh <host> <port>
    ```
 
 2. Enter the password you set up in the app.
