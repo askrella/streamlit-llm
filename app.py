@@ -46,7 +46,7 @@ def get_service_context():
 
 @st.cache_resource
 def get_whisper_model():
-    return whisper.load_model("small")
+    return whisper.load_model("base")
 
 # Constants
 DATA_PATH = './data'
@@ -71,13 +71,16 @@ def save_uploadedfile(uploadedfile):
 
         # Transcribe
         print(f"Transcribing {uploaded_file_name}...")
-        st.write(f"Transcribing audio file {uploaded_file_name}...")
 
+        st.write("Loading OpenAI Whisper model...")
         model = get_whisper_model()
+
+        st.write(f"Transcribing audio file {uploaded_file_name}...")
         transcription = model.transcribe(audio_temp_file.name)
         transcription_text = transcription["text"]
 
         # Save transcription as text file
+        st.write("Saving transcription as text file...")
         target_file_name = uploaded_file_name.replace(file_extension, 'txt')
         target_file_path = os.path.join(DATA_PATH, target_file_name)
         with open(target_file_path, "w") as f:
