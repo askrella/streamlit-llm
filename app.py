@@ -12,20 +12,24 @@ load_dotenv()
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-llm = ChatOpenAI(
-    temperature=0.9,
-)
-
-embed_model = LangchainEmbedding(
-    HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-mpnet-base-v2"
+@st.cache_data
+def get_service_context():
+    llm = ChatOpenAI(
+        temperature=0.9,
     )
-)
 
-service_context = ServiceContext.from_defaults(
-    llm=llm,
-    embed_model=embed_model,
-)
+    embed_model = LangchainEmbedding(
+        HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-mpnet-base-v2"
+        )
+    )
+
+    service_context = ServiceContext.from_defaults(
+        llm=llm,
+        embed_model=embed_model,
+    )
+
+    return service_context
 
 # Constants
 DATA_PATH = './data'
@@ -43,8 +47,8 @@ def save_uploadedfile(uploadedfile):
 # Query function
 def semantic_search(query):
     documents = SimpleDirectoryReader(DATA_PATH).load_data()
-    index = VectorStoreIndex.from_documents(documents, service_context=service_context)
-    engine = index.as_query_engine(service_context=service_context)
+    index = VectorStoreIndex.from_documents(documents, service_context=get_service_context())
+    engine = index.as_query_engine(service_context=get_service_context())
     response = engine.query(query)
     return response
 
