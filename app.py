@@ -68,6 +68,7 @@ question = st.text_area("Enter your question")
 # Upload
 if uploaded_file is not None:
     save_uploadedfile(uploaded_file)
+    print(f"Uploaded {uploaded_file.name} to {DATA_PATH} folder!")
 
 # Buttons
 if os.path.exists(DATA_PATH):
@@ -76,29 +77,34 @@ if os.path.exists(DATA_PATH):
 
     # Delete button
     if delete_button:
+        print(f"Deleting {DATA_PATH} folder...")
         shutil.rmtree(DATA_PATH)
 
         # Create data/ folder
         os.mkdirs(DATA_PATH)
 
-        st.write("Deleted data/ folder")
+        st.write("Deleted data folder!")
 
     # Send button
     if send_button:
         st.title("Question:")
         st.write(question)
+        print(f"Question: {question}")
         result = semantic_search(question)
 
         # Answer
         response_text = result.response
         st.title("Answer")
         st.write(response_text)
+        print(f"Answer: {response_text}")
 
         # Sources
         formatted_sources = result.get_formatted_sources()
         st.title("Sources")
         st.write(formatted_sources)
+        print(f"Sources: {formatted_sources}")
 
         # Extra Info
         st.title("Extra Info")
         st.write(result.extra_info)
+        print(f"Extra Info: {result.extra_info}")
