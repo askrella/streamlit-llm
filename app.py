@@ -1,11 +1,14 @@
 import streamlit as st 
 import os
 import openai
-import shutil
 
 # Llama Index
-from llama_index import ServiceContext, VectorStoreIndex, SimpleDirectoryReader, LangchainEmbedding
-
+from llama_index import (
+    ServiceContext,
+    StorageContext,
+    VectorStoreIndex,
+    LangchainEmbedding
+)
 
 # Langchain
 from langchain.chat_models import ChatOpenAI
@@ -16,13 +19,26 @@ import whisper
 
 # Util
 from dotenv import load_dotenv
-import tempfile
 
 # Load .env file
 load_dotenv()
 
 # Set OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+
+# Constants
+VECTOR_STORE_PATH = './vector_store'
+TEMP_PATH = './temp'
+AUDIO_EXTENSIONS = ('.mp3', '.ogg', '.wav')
+
+# Streamlit app
+st.set_page_config(
+    page_title="Streamlit LLM",
+    page_icon="👋",
+)
+
+st.write("# Welcome to Streamlit LLM! 👋")
+st.sidebar.success("Select an option above.")
 
 # Build & cache service context
 @st.cache_resource
@@ -44,126 +60,33 @@ def get_service_context():
 
     return service_context
 
+def get_storage_context():
+    # If vector store doesnt exist, create it
+    if not os.path.exists(VECTOR_STORE_PATH):
+        index = VectorStoreIndex.from_documents(
+            [],
+            service_context=get_service_context()
+        )
+        index.storage_context.persist(VECTOR_STORE_PATH)
+    
+    return StorageContext.from_defaults(
+        persist_dir=VECTOR_STORE_PATH,
+    )
+
 @st.cache_resource
 def get_whisper_model():
     return whisper.load_model("base")
 
-# Constants
-DATA_PATH = './data'
-AUDIO_EXTENSIONS = ('.mp3', '.ogg', '.wav')
+# Transcribe audio
+def transcribe_audio(audio_file_path):
+    model = get_whisper_model()
 
-# Function to save uploaded file
-def save_uploadedfile(uploadedfile):
-    # Create data/ folder if it doesn't exist
-    if not os.path.exists(DATA_PATH):
-        os.makedirs(DATA_PATH)
+    st.write(f"Transcribing audio file...")
+    transcription = model.transcribe(audio_file_path)
+    transcription_text = transcription["text"]
 
-    # Audio, Video support
-    if uploadedfile.name.endswith(('.mp3', '.ogg', '.wav', '.mp4')):
-        uploaded_file_name = uploadedfile.name
-        uploaded_file_buffer = uploadedfile.getbuffer()
-        file_extension = uploaded_file_name.split('.')[-1]
+    # Strip transcription text
+    transcription_text = transcription_text.strip()
+    
+    return transcription_text
 
-        # Write audio file to temp file
-        audio_temp_file = tempfile.NamedTemporaryFile(suffix="." + file_extension, delete=False)
-        audio_temp_file.write(uploaded_file_buffer)
-        print(f"Saved {uploaded_file_name} to temprary file: {audio_temp_file.name}")
-
-        # Transcribe
-        print(f"Transcribing {uploaded_file_name}...")
-
-        st.write("Loading OpenAI Whisper model...")
-        model = get_whisper_model()
-
-        st.write(f"Transcribing audio file {uploaded_file_name}...")
-        transcription = model.transcribe(audio_temp_file.name)
-        transcription_text = transcription["text"]
-
-        # Strip transcription text
-        transcription_text = transcription_text.strip()
-
-        # Save transcription as text file
-        st.write("Saving transcription as text file...")
-        target_file_name = uploaded_file_name.replace(file_extension, 'txt')
-        target_file_path = os.path.join(DATA_PATH, target_file_name)
-        with open(target_file_path, "w") as f:
-            f.write(transcription_text)
-
-        print(f"Transcribed {uploaded_file_name} to {DATA_PATH} folder!")
-        st.success("Transcribed audio file, ready to query!")
-    # Others, just save: Text support
-    else:
-        target_file_path = os.path.join(DATA_PATH, uploadedfile.name)
-        with open(target_file_path, "wb") as f:
-            f.write(uploadedfile.getbuffer())
-
-# Query function
-def semantic_search(query):
-    documents = SimpleDirectoryReader(DATA_PATH).load_data()
-    index = VectorStoreIndex.from_documents(documents, service_context=get_service_context())
-    engine = index.as_query_engine(service_context=get_service_context())
-    response = engine.query(query)
-    return response
-
-# Streamlit app
-st.set_page_config(layout='centered')
-st.title('Streamlit LLM')
-
-# Password protection
-password = st.text_input("Password:", type="password")
-if password != os.environ.get("PASSWORD"):
-    st.stop()
-
-# Streamlit components
-uploaded_file = st.file_uploader("Upload your file")
-question = st.text_area("Enter your question")
-
-# Upload
-if uploaded_file is not None:
-    save_uploadedfile(uploaded_file)
-    print(f"Uploaded {uploaded_file.name} to {DATA_PATH} folder!")
-
-# Buttons
-if os.path.exists(DATA_PATH):
-    send_button = st.button("Send", type="primary")
-    delete_button = st.button("Delete", type="primary")
-
-    # Delete button
-    if delete_button:
-        print(f"Deleting {DATA_PATH} folder...")
-        shutil.rmtree(DATA_PATH)
-
-        # Create data/ folder
-        os.mkdir(DATA_PATH)
-
-        st.write("Deleted data folder!")
-
-    # Send button
-    if send_button:
-        # Print question
-        st.title("Question:")
-        st.write(question)
-
-        # Spinner
-        st.spinner("Querying...")
-
-        # Query
-        print(f"Question: {question}")
-        result = semantic_search(question)
-
-        # Answer
-        response_text = result.response
-        st.title("Answer")
-        st.write(response_text)
-        print(f"Answer: {response_text}")
-
-        # Sources
-        formatted_sources = result.get_formatted_sources()
-        st.title("Sources")
-        st.write(formatted_sources)
-        print(f"Sources: {formatted_sources}")
-
-        # Extra Info
-        st.title("Extra Info")
-        st.write(result.extra_info)
-        print(f"Extra Info: {result.extra_info}")
