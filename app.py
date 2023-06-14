@@ -50,7 +50,7 @@ def semantic_search(query):
 
 # Streamlit app
 st.set_page_config(layout='centered')
-st.title('PDF AI (Elina)')
+st.title('PDF AI')
 
 # Password protection
 password = st.text_input("Password:", type="password")
