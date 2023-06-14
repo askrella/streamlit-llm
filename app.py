@@ -3,15 +3,28 @@ import os
 import openai
 import shutil
 
+# Llama Index
 from llama_index import ServiceContext, VectorStoreIndex, SimpleDirectoryReader, LangchainEmbedding
-from dotenv import load_dotenv
+
+
+# Langchain
 from langchain.chat_models import ChatOpenAI
 from langchain.embeddings import HuggingFaceEmbeddings
 
+# OpenAI Whisper
+import whisper
+
+# Util
+from dotenv import load_dotenv
+import tempfile
+
+# Load .env file
 load_dotenv()
 
+# Set OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
+# Build & cache service context
 @st.cache_resource
 def get_service_context():
     llm = ChatOpenAI(
@@ -31,8 +44,13 @@ def get_service_context():
 
     return service_context
 
+@st.cache_resource
+def get_whisper_model():
+    return whisper.load_model("small")
+
 # Constants
 DATA_PATH = './data'
+AUDIO_EXTENSIONS = ('.mp3', '.ogg', '.wav')
 
 # Function to save uploaded file
 def save_uploadedfile(uploadedfile):
@@ -40,9 +58,38 @@ def save_uploadedfile(uploadedfile):
     if not os.path.exists(DATA_PATH):
         os.makedirs(DATA_PATH)
 
-    # Save file to data/ folder
-    with open(os.path.join(DATA_PATH, uploadedfile.name), "wb") as f:
-        f.write(uploadedfile.getbuffer())
+    # Audio support
+    if uploadedfile.name.endswith(('.mp3', '.ogg', '.wav')):
+        uploaded_file_name = uploadedfile.name
+        uploaded_file_buffer = uploadedfile.getbuffer()
+        file_extension = uploaded_file_name.split('.')[-1]
+
+        # Write audio file to temp file
+        audio_temp_file = tempfile.NamedTemporaryFile(suffix=file_extension, delete=False)
+        audio_temp_file.write(uploaded_file_buffer)
+        print(f"Saved {uploaded_file_name} to temprary file: {audio_temp_file.name}")
+
+        # Transcribe
+        print(f"Transcribing {uploaded_file_name}...")
+        st.write(f"Transcribing audio file {uploaded_file_name}...")
+
+        model = get_whisper_model()
+        transcription = model.transcribe(audio_temp_file.name)
+        transcription_text = transcription["text"]
+
+        # Save transcription as text file
+        target_file_name = uploaded_file_name.replace(file_extension, 'txt')
+        target_file_path = os.path.join(DATA_PATH, target_file_name)
+        with open(target_file_path, "w") as f:
+            f.write(transcription_text)
+
+        print(f"Transcribed {uploaded_file_name} to {DATA_PATH} folder!")
+        st.success("Transcribed audio file, ready to query!")
+    # Others, just save: Text support
+    else:
+        target_file_path = os.path.join(DATA_PATH, uploadedfile.name)
+        with open(target_file_path, "wb") as f:
+            f.write(uploadedfile.getbuffer())
 
 # Query function
 def semantic_search(query):

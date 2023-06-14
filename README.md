@@ -1,6 +1,10 @@
 # Streamlit LLM
 
-This is a Streamlit app that allows you to upload an document or file and ask questions about its content. It uses the Llama Index framework, powered by OpenAI's ChatGPT and Hugging Face's Sentence Transformers model, to perform semantic search and provide answers based on your queries.
+This is a Streamlit app that allows you to upload an document or audio file and ask questions about its content. It uses the Llama Index framework, powered by OpenAI's ChatGPT and Hugging Face's Sentence Transformers model, to perform semantic search and provide answers based on your queries.
+
+## Prerequisites
+
+For audio transcription, you need to have [ffmpeg](https://ffmpeg.org/) installed on your system.
 
 ## Installation
 
@@ -13,21 +17,16 @@ This is a Streamlit app that allows you to upload an document or file and ask qu
 2. Install the required dependencies:
 
    ```shell
-   pip install streamlit llama-index python-dotenv sentence_transformers pypdf
+   pip install -r requirements.txt
    ```
 
 3. Set up environment variables:
 
    - Create a file named `.env` in the root directory of the project.
-   - Add your OpenAI API key to the `.env` file:
+   - Add your OpenAI API key and a Password (protects your streamlit llm tool) to the `.env` file:
 
      ```text
      OPENAI_API_KEY=your_api_key
-     ```
-     
-   - Add a password for the app:
-
-     ```text
      PASSWORD=your_password
      ```
 
@@ -41,7 +40,7 @@ This is a Streamlit app that allows you to upload an document or file and ask qu
 
 2. Enter the password you set up in the app.
 
-3. Upload a PDF document, audio file or text file by clicking the "Upload" button.
+3. Upload a document, audio file or text file by selecting the file and clicking "Upload" button.
 
 4. Enter your question in the provided text area.
 
@@ -50,6 +49,12 @@ This is a Streamlit app that allows you to upload an document or file and ask qu
 The app will perform semantic search on the uploaded documents and provide the answer to your question. It will also display the sources and additional information related to the answer.
 
 All documents are stored in the `data` directory.
+
+## Supported file types
+
+- All types of raw text documents
+- PDF documents
+- Audio files (mp3, wav, ogg)
 
 ## License
 
