@@ -12,7 +12,7 @@ load_dotenv()
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-@st.cache_data
+@st.cache_resource
 def get_service_context():
     llm = ChatOpenAI(
         temperature=0.9,
