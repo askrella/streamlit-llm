@@ -1,13 +1,13 @@
-# PDF AI
+# Streamlit LLM
 
-This is a Streamlit app that allows you to upload a PDF document and ask questions about its content. It uses the Llama Index framework, powered by OpenAI's ChatGPT and Hugging Face's Sentence Transformers model, to perform semantic search and provide answers based on your queries.
+This is a Streamlit app that allows you to upload an document or file and ask questions about its content. It uses the Llama Index framework, powered by OpenAI's ChatGPT and Hugging Face's Sentence Transformers model, to perform semantic search and provide answers based on your queries.
 
 ## Installation
 
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/your_username/your_repository.git
+   git clone https://github.com/navopw/streamlit-llm.git
    ```
 
 2. Install the required dependencies:
@@ -36,20 +36,20 @@ This is a Streamlit app that allows you to upload a PDF document and ask questio
 1. Run the Streamlit app:
 
    ```shell
-   streamlit run app.py
+   ./start.sh <port>
    ```
 
 2. Enter the password you set up in the app.
 
-3. Upload a PDF document by clicking the "Upload your PDF" button.
+3. Upload a PDF document, audio file or text file by clicking the "Upload" button.
 
 4. Enter your question in the provided text area.
 
 5. Click the "Send" button to get the answer.
 
-The app will perform semantic search on the uploaded PDF document and provide the answer to your question. It will also display the sources and additional information related to the answer.
+The app will perform semantic search on the uploaded documents and provide the answer to your question. It will also display the sources and additional information related to the answer.
 
-Note: Make sure the PDF document is stored in the `data` directory.
+All documents are stored in the `data` directory.
 
 ## License
 

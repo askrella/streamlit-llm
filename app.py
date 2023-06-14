@@ -50,7 +50,7 @@ def semantic_search(query):
 
 # Streamlit app
 st.set_page_config(layout='centered')
-st.title('LLM against Data')
+st.title('Streamlit LLM')
 
 # Password protection
 password = st.text_input("Password:", type="password")
@@ -58,12 +58,12 @@ if password != os.environ.get("PASSWORD"):
     st.stop()
 
 # Streamlit components
-uploaded_pdf = st.file_uploader("Upload your PDF", type=['pdf'])
+uploaded_file = st.file_uploader("Upload your file")
 question = st.text_area("Enter your question")
 
 # Upload
-if uploaded_pdf is not None:
-    save_uploadedfile(uploaded_pdf)
+if uploaded_file is not None:
+    save_uploadedfile(uploaded_file)
 
 # Buttons
 if os.path.exists(DATA_PATH):
