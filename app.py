@@ -65,7 +65,7 @@ def save_uploadedfile(uploadedfile):
         file_extension = uploaded_file_name.split('.')[-1]
 
         # Write audio file to temp file
-        audio_temp_file = tempfile.NamedTemporaryFile(suffix=file_extension, delete=False)
+        audio_temp_file = tempfile.NamedTemporaryFile(suffix="." + file_extension, delete=False)
         audio_temp_file.write(uploaded_file_buffer)
         print(f"Saved {uploaded_file_name} to temprary file: {audio_temp_file.name}")
 
