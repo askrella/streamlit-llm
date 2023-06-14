@@ -2,6 +2,9 @@
 
 This is a Streamlit app that allows you to upload an document or audio file and ask questions about its content. It uses the Llama Index framework, powered by OpenAI's ChatGPT and Hugging Face's Sentence Transformers model, to perform semantic search and provide answers based on your queries.
 
+## Preview
+![image](https://github.com/navopw/streamlit-llm/assets/6507938/9eaa95fc-2767-4c66-97fc-8f6e0d4c17e7)
+
 ## Prerequisites
 
 For audio transcription, you need to have [ffmpeg](https://ffmpeg.org/) installed on your system.
