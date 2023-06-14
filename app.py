@@ -81,7 +81,7 @@ if os.path.exists(DATA_PATH):
         shutil.rmtree(DATA_PATH)
 
         # Create data/ folder
-        os.mkdirs(DATA_PATH)
+        os.mkdir(DATA_PATH)
 
         st.write("Deleted data folder!")
 
