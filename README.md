@@ -27,7 +27,6 @@ For audio transcription, you need to have [ffmpeg](https://ffmpeg.org/) installe
 
      ```text
      OPENAI_API_KEY=your_api_key
-     PASSWORD=your_password
      ```
 
 ## Usage
@@ -38,14 +37,6 @@ For audio transcription, you need to have [ffmpeg](https://ffmpeg.org/) installe
    ./start.sh <host> <port>
    ```
 
-2. Enter the password you set up in the app.
-
-3. Upload a document, audio file or text file by selecting the file and clicking "Upload" button.
-
-4. Enter your question in the provided text area.
-
-5. Click the "Send" button to get the answer.
-
 The app will perform semantic search on the uploaded documents and provide the answer to your question. It will also display the sources and additional information related to the answer.
 
 All documents are stored in the `data` directory.
@@ -55,6 +46,7 @@ All documents are stored in the `data` directory.
 - All types of raw text documents
 - PDF documents
 - Audio files (mp3, wav, ogg)
+- Video file (mp4)
 
 ## License
 
