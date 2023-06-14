@@ -79,6 +79,9 @@ def save_uploadedfile(uploadedfile):
         transcription = model.transcribe(audio_temp_file.name)
         transcription_text = transcription["text"]
 
+        # Strip transcription text
+        transcription_text = transcription_text.strip()
+
         # Save transcription as text file
         st.write("Saving transcription as text file...")
         target_file_name = uploaded_file_name.replace(file_extension, 'txt')
