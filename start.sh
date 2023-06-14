@@ -12,4 +12,4 @@ if [[ ! $port =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 
-streamlit run app.py --browser.serverAddress $host --server.port $port
+streamlit run app.py --browser.serverAddress $host --server.port $port --enableCORS false
