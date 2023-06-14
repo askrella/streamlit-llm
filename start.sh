@@ -2,12 +2,12 @@
 host=$1
 port=$2
 
-if [ ! $host =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]; then
+if ! echo "$host" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'; then
   echo "Invalid host. Please provide a valid IPv4 address."
   exit 1
 fi
 
-if [ ! $port =~ ^[0-9]+$ ]; then
+if ! echo "$port" | grep -qE '^[0-9]+$'; then
   echo "Invalid port. Please provide a valid numeric port number."
   exit 1
 fi
